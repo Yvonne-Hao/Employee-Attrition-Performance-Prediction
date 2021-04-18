@@ -1,0 +1,228 @@
+---
+title: "Group Project"
+author: "Group3(Xinyi Yang, Tong Niu, Yvonne Hao)"
+date: "4/27/2020"
+output:
+  word_document: yes
+  pdf_document: yes
+  html_document: yes
+---
+
+#Set Up
+upload package
+```{r}
+rm(list = ls())
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(corrplot)
+
+```
+
+#Load Data
+```{r}
+attrition <- read_csv("WA_Fn-UseC_-HR-Employee-Attrition.csv", 
+    col_types = cols(Education = col_character(), 
+        EnvironmentSatisfaction = col_character(), 
+        JobInvolvement = col_character(), 
+        JobLevel = col_character(), JobSatisfaction = col_character(), 
+        PerformanceRating = col_character(), 
+        RelationshipSatisfaction = col_character(), 
+        StockOptionLevel = col_character(), 
+        WorkLifeBalance = col_character()))
+View(attrition)
+```
+#Data Preparation
+#check the missing value
+```{r}
+sum(is.na(attrition))
+```
+
+
+#Statistic Summary
+```{r}
+glimpse(attrition)
+```
+
+```{r}
+summary(attrition)
+```
+
+
+```{r}
+attrition <- attrition%>%
+  mutate(
+    Attrition=as.factor(Attrition),
+    BusinessTravel=as.factor(BusinessTravel),
+    Department=as.factor(Department),
+    Education=as.factor(Education),
+    EducationField=as.factor(EducationField),
+    EnvironmentSatisfaction=as.factor(EnvironmentSatisfaction),
+    Gender=as.factor(Gender),
+    JobInvolvement=as.factor(JobInvolvement),
+    JobLevel=as.factor(JobLevel),
+    JobRole=as.factor(JobRole),
+    JobSatisfaction=as.factor(JobSatisfaction),
+    MaritalStatus=as.factor(MaritalStatus),
+    Over18=as.factor(Over18),
+    OverTime=as.factor(OverTime),
+    PerformanceRating=as.factor(PerformanceRating),
+    RelationshipSatisfaction=as.factor(RelationshipSatisfaction),
+    StockOptionLevel=as.factor(StockOptionLevel),
+    WorkLifeBalance=as.factor(WorkLifeBalance))
+
+summary(attrition)
+```
+
+
+#Data Visualization
+
+##Categoric factors
+
+Using Bar Chart to find the distribution relationship of categoric factors
+
+```{r}
+attrition %>%
+  ggplot(aes(x=BusinessTravel,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=Department,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=Education,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=EducationField,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=EnvironmentSatisfaction,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=Gender,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=JobInvolvement,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=JobLevel,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=JobRole,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=JobSatisfaction,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=MaritalStatus,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=Over18,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=OverTime,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=PerformanceRating,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=RelationshipSatisfaction,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=StockOptionLevel,fill=Attrition)) +
+  geom_bar()
+
+attrition %>%
+  ggplot(aes(x=WorkLifeBalance,fill=Attrition)) +
+  geom_bar()
+
+```
+
+##Numeric factors
+### Histogram Chart
+Using Histogram Chart to find the distribution relationship of MonthlyIncome and MonthlyRate
+```{r}
+
+attrition %>%
+  ggplot(aes(x=MonthlyIncome,fill=Attrition)) +
+  geom_histogram(binwidth=500,alpha=.5,position="identity")
+
+attrition %>%
+  ggplot(aes(x=MonthlyRate,fill=Attrition)) +
+  geom_histogram(binwidth=500,alpha=.5,position="identity")
+
+
+```
+### Box Plot
+Using Box Plot to find the distribution relationship of other numeric factors
+```{r}
+ggplot(attrition,aes(x=Attrition,y=Age,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=DailyRate,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=DistanceFromHome,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=EmployeeCount,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=EmployeeNumber,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=HourlyRate,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=NumCompaniesWorked,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=PercentSalaryHike,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=StandardHours,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=TotalWorkingYears,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=TrainingTimesLastYear,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=YearsAtCompany,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=YearsInCurrentRole,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=YearsSinceLastPromotion,fill=Attrition))+geom_boxplot()
+
+ggplot(attrition,aes(x=Attrition,y=YearsWithCurrManager,fill=Attrition))+geom_boxplot()
+
+```
+From the boxplot we could find that there are two unmeaningful factors:employeeCount and StandardHours. And they will not be the variables in further classification model.
+
+
+
+##HeatMap
+
+Using heatmap we could find the relationship between numeric variables
+
+```{r}
+numeric_attrition <- attrition[,c(1,4,6,10,13,19,20,21,24,29,30,32:35)]
+numeric_Attrition = as.numeric(attrition$Attrition)- 1
+numeric_attrition = cbind(numeric_attrition, numeric_Attrition)
+str(numeric_attrition)
+
+M <- cor(numeric_attrition)
+corrplot(M, method="circle")
+```
+
+
+
+#Classification
+```{r}
+
+```
+
